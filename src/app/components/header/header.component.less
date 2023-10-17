@@ -1,0 +1,40 @@
+.header {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 90rem;
+  padding: 1rem;
+}
+
+.header-name {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.header-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 3rem;
+
+  li {
+    list-style: none;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+  }
+
+  li a {
+    text-decoration: none;
+  }
+}
+
+li:hover {
+  background-color: orange;
+  cursor: pointer;
+}
+
+.active {
+  border-radius: 0.5rem;
+  border: 1px solid black;
+}

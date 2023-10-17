@@ -1,0 +1,13 @@
+<header class="header">
+  <div class="header-name">IBooks Store</div>
+  <nav>
+    <ul class="header-links">
+      <li [ngClass]="{ 'active': isTabActive('main') }">
+        <a [routerLink]="['/main']">Главная</a>
+      </li>
+      <li [ngClass]="{ 'active': isTabActive('cart') }">
+        <a [routerLink]="['/cart']">Корзина</a>
+      </li>
+    </ul>
+  </nav>
+</header>

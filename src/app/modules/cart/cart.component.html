@@ -1,0 +1,43 @@
+<div class="cart" *ngIf="(books$ | async) as books">
+  <table class="cart-table" *ngIf="books.length > 0; else emptyCart">
+    <tr>
+      <th>#</th>
+      <th>Название</th>
+      <th>Дополнительно</th>
+      <th>Цена</th>
+      <th>Корзина</th>
+    </tr>
+    <tr class="cart-row" *ngFor="let book of books; let i = index">
+      <td>{{i + 1}}</td>
+      <td>
+        <img width="30px"
+             [src]="book.image"
+             [alt]="book.title"
+        >
+        {{book.title}}
+      </td>
+      <td>
+        {{book.subtitle}}
+      </td>
+      <td>
+        {{book.price}}
+      </td>
+      <td>
+        <button (click)="removeFromCart(book)"
+                [ngClass]="{'remove-from-cart-button': isBookInCart(book)}">
+          {{'Удалить из корзины'}}
+        </button>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>Сумма: ${{totalSum$ | async}}</td>
+    </tr>
+  </table>
+</div>
+
+<ng-template #emptyCart>
+  <div>Корзина пуста</div>
+</ng-template>

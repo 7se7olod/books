@@ -1,0 +1,38 @@
+<div class="books">
+  <app-search-book (book)="searchBooks($event)"></app-search-book>
+  <table class="books-table"
+         *ngIf="(books$ | async) as books">
+    <tr>
+      <th>#</th>
+      <th>
+        <button (click)="sortBooksByTitle()">Название</button>
+      </th>
+      <th>Дополнительно</th>
+      <th>
+        <button (click)="sortBooksByPrice()">Цена</button>
+      </th>
+      <th>Корзина</th>
+    </tr>
+    <tr
+      class="books-row"
+      *ngFor="let book of books; let i = index"
+    >
+      <td>{{i + 1}}</td>
+      <td class="books-title" (click)="toDetail(book.isbn13)">
+        <img width="30px"
+             [src]="book.image"
+             [alt]="book.title">
+        {{book.title}}
+      </td>
+      <td>{{book.subtitle}}</td>
+      <td>{{book.price}}</td>
+      <td>
+        <button class="books-button"
+                [ngClass]="{'add-to-cart-button': !isBookInCart(book), 'remove-from-cart-button': isBookInCart(book)}"
+                (click)="addToOrRemoveFromCart(book)">
+          {{ isBookInCart(book) ? 'Удалить из корзины' : 'Добавить в корзину' }}
+        </button>
+      </td>
+    </tr>
+  </table>
+</div>

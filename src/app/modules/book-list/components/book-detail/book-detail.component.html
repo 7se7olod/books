@@ -1,0 +1,18 @@
+<a routerLink="/main"><—Назад</a>
+<div class="book" *ngIf="(book$ | async) as book">
+  <div>
+    <img class="book-image" [src]="book.image" [alt]="book.title">
+  </div>
+  <div class="book-block">
+    <h1>{{book.title}}</h1>
+    <p class="book-subtitle" *ngIf="book.subtitle">Дополнительно: {{book.subtitle}}</p>
+    <div class="book-price">Цена: {{book.price}}</div>
+    <a class="book-full-info" [href]="book.url" target="_blank">Полная информация</a>
+    <button
+      class="book-buy-button"
+      [ngClass]="{'add-to-cart-button': !isBookInCart(book), 'remove-from-cart-button': isBookInCart(book)}"
+      (click)="addToOrRemoveFromCart(book)">
+      {{ isBookInCart(book) ? 'Удалить из корзины' : 'Добавить в корзину' }}
+    </button>
+  </div>
+</div>
