@@ -1,16 +1,19 @@
 <div class="books">
-  <app-search-book (book)="searchBooks($event)"></app-search-book>
+  <input type="text" placeholder="Поиск" #inputElement (input)="searchBooks(inputElement.value)">
+  <select class="books-sort" (change)="sortBooks($event)">
+    <option disabled selected>Выбрать сортировку</option>
+    <option value="A-Z">Сортировать от A до Z</option>
+    <option value="Z-A">Сортировать от Z до A</option>
+    <option value="lowPrice">Сначала дешевые</option>
+    <option value="highPrice">Сначала дорогие</option>
+  </select>
   <table class="books-table"
          *ngIf="(books$ | async) as books">
     <tr>
       <th>#</th>
-      <th>
-        <button (click)="sortBooksByTitle()">Название</button>
-      </th>
+      <th>Название</th>
       <th>Дополнительно</th>
-      <th>
-        <button (click)="sortBooksByPrice()">Цена</button>
-      </th>
+      <th>Цена</th>
       <th>Корзина</th>
     </tr>
     <tr
@@ -18,7 +21,7 @@
       *ngFor="let book of books; let i = index"
     >
       <td>{{i + 1}}</td>
-      <td class="books-title" (click)="toDetail(book.isbn13)">
+      <td class="books-title" (click)="toDetailPage(book.isbn13)">
         <img width="30px"
              [src]="book.image"
              [alt]="book.title">
@@ -28,9 +31,9 @@
       <td>{{book.price}}</td>
       <td>
         <button class="books-button"
-                [ngClass]="{'add-to-cart-button': !isBookInCart(book), 'remove-from-cart-button': isBookInCart(book)}"
-                (click)="addToOrRemoveFromCart(book)">
-          {{ isBookInCart(book) ? 'Удалить из корзины' : 'Добавить в корзину' }}
+                [ngClass]="{'add-to-cart-button': !book.isInCart, 'remove-from-cart-button': book.isInCart}"
+                (click)="addToOrRemoveFromCart(book)"
+                [textContent]="book.isInCart ? 'Удалить из корзины' : 'Добавить в корзину'">
         </button>
       </td>
     </tr>

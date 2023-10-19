@@ -1,8 +1,9 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {Observable, switchMap, take} from "rxjs";
+import {Location} from '@angular/common'
+import {ActivatedRoute, Router} from "@angular/router";
+import {switchMap, take, tap} from "rxjs";
 import {BooksDataService} from "../../../../services/books-data/books-data.service";
-import {BookType} from "../../../../models/book.type";
+import {Book} from "../../../../models/book";
 import {CartService} from "../../../../services/cart-service/cart.service";
 
 @Component({
@@ -13,34 +14,41 @@ import {CartService} from "../../../../services/cart-service/cart.service";
 })
 export class BookDetailComponent implements OnInit {
 
-  book$: Observable<BookType> | undefined;
+  book$ = this.booksDataService.book$;
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly booksDataService: BooksDataService,
     private readonly cartService: CartService,
+    private readonly router: Router,
+    private readonly location: Location,
   ) {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.paramMap.pipe(
-      switchMap(params => params.getAll('id')),
-      take(1),
-    )
-      .subscribe(id => {
-        this.book$ = this.booksDataService.getBookFromId(id);
-      });
+    this.activatedRoute.paramMap
+      .pipe(
+        switchMap(params => params.getAll('id')),
+        tap(id => this.booksDataService.getBookFromId(id).pipe(
+          tap(book => {
+            if (!book) this.router.navigate(['/main']);
+          })
+        ).subscribe()),
+        take(1),
+      )
+      .subscribe();
   }
 
-  isBookInCart(book: BookType): boolean {
-    return this.cartService.isInCart(book);
-  }
-
-  addToOrRemoveFromCart(book: BookType): void {
-    if (this.isBookInCart(book)) {
+  addToOrRemoveFromCart(book: Book): void {
+    if (book.isInCart) {
       this.cartService.removeFromCart(book);
     } else {
       this.cartService.addToCart(book);
     }
+    book.isInCart = !book.isInCart;
+  }
+
+  toBackPage(): void {
+    this.location.back();
   }
 }

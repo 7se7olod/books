@@ -1,72 +1,60 @@
 import {Injectable} from '@angular/core';
-import {map, Observable, shareReplay, take, tap} from "rxjs";
-import {BookType, ResponseBookType} from "../../models/book.type";
-import {HttpClient} from "@angular/common/http";
+import {BehaviorSubject, map, Observable, take, tap} from "rxjs";
+import {Book} from "../../models/book";
+import {Cart} from "../cart-service/cart.service";
+import * as booksJsonData from '../../books-data/books.json';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class BooksDataService {
 
-  public allBooks$: Observable<BookType[]> = this.getBooks$();
+  private readonly cartKey = 'cart';
 
-  public books$: Observable<BookType[]> = this.allBooks$;
+  private readonly responseBooks = booksJsonData;
 
-  constructor(
-    private readonly httpClient: HttpClient,
-  ) {
-  }
+  allBooks$ = new BehaviorSubject<Book[]>(this.responseBooks.books);
 
-  getBooks$(): Observable<BookType[]> {
-    return this.httpClient.get<ResponseBookType>('assets/mocks/books.json')
+  books$ = new BehaviorSubject<Book[]>([]);
+
+  book$ = new BehaviorSubject<Book | undefined>(undefined);
+
+  getBooks$(): Observable<Book[]> {
+    let cart = this.getCart()
+    return this.allBooks$
       .pipe(
-        map(response => response.books),
-        shareReplay(1),
+        map(response => response.map(item => ({
+          ...item,
+          isInCart: Boolean(cart[item.isbn13]),
+        }))),
+        tap(books => {
+          this.books$.next(books);
+        }),
         take(1),
       )
   }
 
-  getBookFromId(id: string): Observable<BookType> {
+  getBookFromId(id: string): Observable<Book | undefined> {
+    const cart = this.getCart();
     return this.allBooks$.pipe(
-      map(books => books.filter(book => book.isbn13 === id)[0]),
-      take(1)
-    );
-  }
-
-  searchBooks(book: string): void {
-    if (!book || book.trim() === '') {
-      this.books$ = this.allBooks$;
-    }
-
-    this.books$ = this.books$.pipe(
-      map(books => books.filter(
-        item => item.title.toLowerCase().includes(book.toLowerCase()) ||
-          item.subtitle.toLowerCase().includes(book.toLowerCase())
-      )))
-  }
-
-  sortBooksByTitle(valueL: boolean): Observable<BookType[]> {
-    return this.books$ = this.books$.pipe(
-      tap(books => books.sort((a, b) => {
-        a.title > b.title ? 1 : -1
-        if (valueL) {
-          return a.title > b.title ? 1 : -1;
-        } else {
-          return a.title > b.title ? -1 : 1;
+      map(allBooks => allBooks.find(book => book.isbn13 === id)),
+      tap(book => {
+        if (book) {
+          if (cart[book.isbn13]) {
+            book.isInCart = true;
+          } else {
+            book.isInCart = false;
+          }
+          this.book$.next(book);
         }
-      })));
+      }),
+      take(1),
+    )
   }
 
-  sortBooksByPrice(value: boolean): Observable<BookType[]> {
-    return this.books$.pipe(
-      tap(books => books.sort((a, b) => {
-        const priceA = parseFloat(a.price.replace('$', ''));
-        const priceB = parseFloat(b.price.replace('$', ''));
-        if (value) {
-          return priceA > priceB ? 1 : -1;
-        } else {
-          return priceA > priceB ? -1 : 1;
-        }
-      })));
+  private getCart(): Cart {
+    const cartJson = localStorage.getItem(this.cartKey);
+    return cartJson ? JSON.parse(cartJson) : {};
   }
 }

@@ -1,35 +1,56 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
-import {BookType} from "../../models/book.type";
+import {BehaviorSubject, Observable, take} from 'rxjs';
+import {Book} from "../../models/book";
 
+export type Cart = {
+  [id: string]: Book,
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
 
-  private cart: BookType[] = [];
+  private readonly cartKey = 'cart';
 
-  cartSubject = new BehaviorSubject<BookType[]>(this.cart);
+  booksInCart$ = new BehaviorSubject<Book[]>([]);
 
-  get cart$() {
-    return this.cartSubject.asObservable();
+  getBooksInCart(): Observable<Book[]> {
+    const cart = Object.values(this.getCart());
+    this.booksInCart$.next(cart);
+    return this.booksInCart$.pipe(
+      take(1),
+    );
   }
 
-  addToCart(book: BookType): void {
-    this.cart.push(book);
-    this.cartSubject.next(this.cart);
+  addToCart(book: Book): void {
+    this.addToLocalStorage(book);
+    const cart = Object.values(this.getCart());
+    this.booksInCart$.next(cart);
   }
 
-  removeFromCart(book: BookType): void {
-    const index = this.cart.findIndex((b) => b.isbn13 === book.isbn13);
-    if (index !== -1) {
-      this.cart.splice(index, 1);
-      this.cartSubject.next(this.cart);
+  removeFromCart(book: Book): void {
+    this.removeFromLocalStorage(book);
+    const cart = Object.values(this.getCart());
+    this.booksInCart$.next(cart);
+  }
+
+  private getCart(): Cart {
+    const cartJson = localStorage.getItem(this.cartKey);
+    return cartJson ? JSON.parse(cartJson) : {};
+  }
+
+  private addToLocalStorage(item: Book) {
+    const cart = this.getCart();
+    cart[item.isbn13] = item;
+    localStorage.setItem(this.cartKey, JSON.stringify(cart));
+  }
+
+  private removeFromLocalStorage(item: Book) {
+    const cart = this.getCart();
+    if (cart[item.isbn13]) {
+      delete cart[item.isbn13];
+      localStorage.setItem(this.cartKey, JSON.stringify(cart));
     }
-  }
-
-  isInCart(book: BookType): boolean {
-    return this.cart.some((b) => b.isbn13 === book.isbn13);
   }
 }

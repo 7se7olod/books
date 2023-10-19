@@ -1,0 +1,15 @@
+<header class="header">
+  <div class="header-name">Читающий Магадан</div>
+  <nav>
+    <ul class="header-links">
+      <li routerLink="/main"
+          [ngClass]="{ 'active': isTabActive('main') }">
+        Главная
+      </li>
+      <li routerLink="/cart"
+          [ngClass]="{ 'active': isTabActive('cart') }">
+        Корзина
+      </li>
+    </ul>
+  </nav>
+</header>

@@ -1,4 +1,4 @@
-<div class="cart" *ngIf="(books$ | async) as books">
+<div class="cart" *ngIf="(booksInCart$ | async) as books">
   <table class="cart-table" *ngIf="books.length > 0; else emptyCart">
     <tr>
       <th>#</th>
@@ -9,7 +9,7 @@
     </tr>
     <tr class="cart-row" *ngFor="let book of books; let i = index">
       <td>{{i + 1}}</td>
-      <td>
+      <td class="book-title" (click)="toDetailPage(book.isbn13)">
         <img width="30px"
              [src]="book.image"
              [alt]="book.title"
@@ -24,7 +24,7 @@
       </td>
       <td>
         <button (click)="removeFromCart(book)"
-                [ngClass]="{'remove-from-cart-button': isBookInCart(book)}">
+                [ngClass]="{'remove-from-cart-button': book.isInCart}">
           {{'Удалить из корзины'}}
         </button>
       </td>

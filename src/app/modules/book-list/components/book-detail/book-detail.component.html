@@ -1,5 +1,5 @@
-<a routerLink="/main"><—Назад</a>
 <div class="book" *ngIf="(book$ | async) as book">
+  <button class="book-back-button" (click)="toBackPage()"><—Назад</button>
   <div>
     <img class="book-image" [src]="book.image" [alt]="book.title">
   </div>
@@ -10,9 +10,9 @@
     <a class="book-full-info" [href]="book.url" target="_blank">Полная информация</a>
     <button
       class="book-buy-button"
-      [ngClass]="{'add-to-cart-button': !isBookInCart(book), 'remove-from-cart-button': isBookInCart(book)}"
-      (click)="addToOrRemoveFromCart(book)">
-      {{ isBookInCart(book) ? 'Удалить из корзины' : 'Добавить в корзину' }}
+      [ngClass]="{'add-to-cart-button': !book.isInCart, 'remove-from-cart-button': book.isInCart}"
+      (click)="addToOrRemoveFromCart(book)"
+      [textContent]="book.isInCart ? 'Удалить из корзины' : 'Добавить в корзину'">
     </button>
   </div>
 </div>

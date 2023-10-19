@@ -11,6 +11,6 @@ export class HeaderComponent {
   }
 
   isTabActive(tabName: string): boolean {
-    return this.router.isActive(tabName, true);
+    return this.router.url.includes(tabName);
   }
 }

@@ -1,8 +1,10 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {CartService} from '../../services/cart-service/cart.service';
-import {BookType} from '../../models/book.type';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
 import {BehaviorSubject, tap} from "rxjs";
 import {map} from "rxjs/operators";
+import {CartService} from '../../services/cart-service/cart.service';
+import {Book} from '../../models/book';
+import {BooksDataService} from "../../services/books-data/books-data.service";
 
 @Component({
   selector: 'app-cart',
@@ -10,11 +12,11 @@ import {map} from "rxjs/operators";
   styleUrls: ['./cart.component.less'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CartComponent {
+export class CartComponent implements OnInit {
 
   totalSum$ = new BehaviorSubject<number>(0);
 
-  books$ = this.cartService.cartSubject.pipe(
+  booksInCart$ = this.cartService.booksInCart$.pipe(
     tap(books => {
       let sum = 0;
       books.forEach(book => {
@@ -22,26 +24,33 @@ export class CartComponent {
       })
       sum = parseFloat(sum.toFixed(2));
       this.totalSum$.next(sum);
-    })
+    }),
   );
 
   constructor(
+    private readonly booksDataService: BooksDataService,
     private readonly cartService: CartService,
+    private readonly router: Router,
   ) {
   }
 
-  isBookInCart(book: BookType): boolean {
-    return this.cartService.isInCart(book);
+  ngOnInit(): void {
+    this.cartService.getBooksInCart().subscribe();
   }
 
-  removeFromCart(book: BookType): void {
-    if (this.isBookInCart(book)) {
+  toDetailPage(id: string): void {
+    if (id) {
+      this.router.navigate(['main', id]);
+    }
+  }
+
+  removeFromCart(book: Book): void {
+    if (book) {
       this.cartService.removeFromCart(book);
       this.totalSum$.pipe(
         map(sum => {
           const bookPrice = parseFloat(book.price.replace('$', ''));
           const result = sum - bookPrice;
-          console.log(result);
           return result.toFixed(2);
         })
       );

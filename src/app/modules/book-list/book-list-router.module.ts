@@ -12,6 +12,11 @@ const routes: Routes = [
     path: ':id',
     component: BookDetailComponent,
   },
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full',
+  },
 ]
 
 @NgModule({
