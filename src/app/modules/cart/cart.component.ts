@@ -14,6 +14,8 @@ import {BooksDataService} from "../../services/books-data/books-data.service";
 })
 export class CartComponent implements OnInit {
 
+  readonly columns = ['number', 'title', 'subtitle', 'price', 'cart'];
+
   totalSum$ = new BehaviorSubject<number>(0);
 
   booksInCart$ = this.cartService.booksInCart$.pipe(

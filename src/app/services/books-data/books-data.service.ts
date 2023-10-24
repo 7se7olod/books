@@ -30,6 +30,7 @@ export class BooksDataService {
         }))),
         tap(books => {
           this.books$.next(books);
+          this.allBooks$.next(books);
         }),
         take(1),
       )

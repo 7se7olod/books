@@ -1,5 +1,11 @@
 <div class="book" *ngIf="(book$ | async) as book">
-  <button class="book-back-button" (click)="toBackPage()"><—Назад</button>
+  <button tuiButton
+          class="book-back-button"
+          appearance="flat"
+          size="xs"
+          (click)="toBackPage()">
+    Назад
+  </button>
   <div>
     <img class="book-image" [src]="book.image" [alt]="book.title">
   </div>
@@ -9,10 +15,14 @@
     <div class="book-price">Цена: {{book.price}}</div>
     <a class="book-full-info" [href]="book.url" target="_blank">Полная информация</a>
     <button
-      class="book-buy-button"
-      [ngClass]="{'add-to-cart-button': !book.isInCart, 'remove-from-cart-button': book.isInCart}"
+      *tuiLet="book.isInCart as isBookInCart"
+      tuiButton
+      size="l"
+      [appearance]="isBookInCart ? 'secondary-destructive' : 'primary'"
+      [icon]="isBookInCart ? 'tuiIconTrash2' : 'tuiIconPlus'"
       (click)="addToOrRemoveFromCart(book)"
-      [textContent]="book.isInCart ? 'Удалить из корзины' : 'Добавить в корзину'">
+    >
+      {{isBookInCart ? 'Удалить из корзины' : 'Добавить в корзину'}}
     </button>
   </div>
 </div>

@@ -1,15 +1,29 @@
 <header class="header">
-  <div class="header-name">Читающий Магадан</div>
-  <nav>
-    <ul class="header-links">
-      <li routerLink="/main"
-          [ngClass]="{ 'active': isTabActive('main') }">
-        Главная
-      </li>
-      <li routerLink="/cart"
-          [ngClass]="{ 'active': isTabActive('cart') }">
-        Корзина
-      </li>
-    </ul>
-  </nav>
+  <div class="header-container">
+    <div class="header-name">Книжный</div>
+    <nav>
+      <ul class="header-links">
+        <button tuiIconButton
+                title="Главная"
+                icon="tuiIconHome"
+                size="m"
+                routerLink="/main"
+                shape="rounded"
+                appearance="flat"
+                [ngClass]="{ 'active': isTabActive('main') }">
+          Главная
+        </button>
+        <button tuiIconButton
+                title="Корзина"
+                size="m"
+                icon="tuiIconShoppingCart"
+                routerLink="/cart"
+                shape="rounded"
+                appearance="flat"
+                [ngClass]="{ 'active': isTabActive('cart') }">
+          Корзина
+        </button>
+      </ul>
+    </nav>
+  </div>
 </header>
