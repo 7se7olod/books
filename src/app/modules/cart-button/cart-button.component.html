@@ -1,0 +1,41 @@
+<div class="cart-button" *ngIf="book">
+  <button
+    *ngIf="book.counterBooks"
+    (click)="removeBookFromCart(book, template)"
+    tuiIconButton
+    title="Удалить из корзины"
+    size="s"
+    shape="rounded"
+    appearance="secondary-destructive"
+    icon="tuiIconMinusCircle"
+  >
+  </button>
+  <div *ngIf="book.counterBooks">{{ book.counterBooks }}</div>
+  <button
+    (click)="addBookToCart(book)"
+    tuiIconButton
+    title="Добавить в корзину"
+    size="s"
+    shape="rounded"
+    appearance="primary"
+    icon="tuiIconPlusCircle"
+  >
+  </button>
+</div>
+
+<ng-template #template let-observer>
+  <p>Вы действительно хотите удалить книгу {{ book?.title }}?</p>
+  <button
+    class="tui-space_right-3"
+    (click)="dialogRemoveBook(book!, observer)"
+    size="m"
+    tuiButton
+    type="button"
+    appearance="secondary-destructive"
+  >
+    Да, удалить!
+  </button>
+  <button (click)="observer.complete()" size="m" tuiButton type="button">
+    Нет
+  </button>
+</ng-template>

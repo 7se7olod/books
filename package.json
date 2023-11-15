@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "deploy": "npx ngh --dir=docs/books",
+    "prettier": "npx prettier . --write"
   },
   "private": true,
   "dependencies": {
@@ -18,13 +19,13 @@
     "@angular/platform-browser": "16.2.0",
     "@angular/platform-browser-dynamic": "16.2.0",
     "@angular/router": "16.2.0",
-    "@taiga-ui/addon-commerce": "^3.50.0",
-    "@taiga-ui/addon-table": "^3.50.0",
-    "@taiga-ui/cdk": "^3.49.1",
-    "@taiga-ui/core": "^3.49.1",
-    "@taiga-ui/icons": "^3.49.1",
-    "@taiga-ui/kit": "^3.49.1",
-    "@taiga-ui/styles": "^3.49.1",
+    "@taiga-ui/addon-commerce": "3.49.1",
+    "@taiga-ui/addon-table": "3.49.1",
+    "@taiga-ui/cdk": "3.49.1",
+    "@taiga-ui/core": "3.49.1",
+    "@taiga-ui/icons": "3.49.1",
+    "@taiga-ui/kit": "3.49.1",
+    "@taiga-ui/styles": "3.49.1",
     "@tinkoff/ng-dompurify": "3.0.0",
     "dompurify": "2.2.9",
     "rxjs": "7.8.0",
@@ -35,15 +36,9 @@
     "@angular-devkit/build-angular": "16.2.0",
     "@angular/cli": "16.2.0",
     "@angular/compiler-cli": "16.2.0",
+    "@tinkoff/prettier-config": "^2.0.0",
     "@types/dompurify": "2.2.3",
-    "@types/jasmine": "4.3.0",
     "angular-cli-ghpages": "1.0.7",
-    "jasmine-core": "4.6.0",
-    "karma": "6.4.0",
-    "karma-chrome-launcher": "3.2.0",
-    "karma-coverage": "2.2.0",
-    "karma-jasmine": "5.1.0",
-    "karma-jasmine-html-reporter": "2.1.0",
     "typescript": "5.1.3"
   }
 }

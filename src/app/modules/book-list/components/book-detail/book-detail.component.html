@@ -1,28 +1,28 @@
-<div class="book" *ngIf="(book$ | async) as book">
-  <button tuiButton
-          class="book-back-button"
-          appearance="flat"
-          size="xs"
-          (click)="toBackPage()">
+<div class="book" *ngIf="book$ | async as book">
+  <button
+    class="book-back-button"
+    (click)="toBackPage()"
+    tuiButton
+    appearance="flat"
+    size="xs"
+  >
     Назад
   </button>
   <div>
-    <img class="book-image" [src]="book.image" [alt]="book.title">
+    <img class="book-image" [src]="book.image" [alt]="book.title" />
   </div>
   <div class="book-block">
-    <h1>{{book.title}}</h1>
-    <p class="book-subtitle" *ngIf="book.subtitle">Дополнительно: {{book.subtitle}}</p>
-    <div class="book-price">Цена: {{book.price}}</div>
-    <a class="book-full-info" [href]="book.url" target="_blank">Полная информация</a>
-    <button
-      *tuiLet="book.isInCart as isBookInCart"
-      tuiButton
-      size="l"
-      [appearance]="isBookInCart ? 'secondary-destructive' : 'primary'"
-      [icon]="isBookInCart ? 'tuiIconTrash2' : 'tuiIconPlus'"
-      (click)="addToOrRemoveFromCart(book)"
+    <h1>{{ book.title }}</h1>
+    <p class="book-subtitle" *ngIf="book.subtitle"
+      >Дополнительно: {{ book.subtitle }}</p
     >
-      {{isBookInCart ? 'Удалить из корзины' : 'Добавить в корзину'}}
-    </button>
+    <div class="book-price">Цена: {{ book.price }}</div>
+    <a class="book-full-info" [href]="book.url" target="_blank"
+      >Полная информация</a
+    >
+    <div>
+      Корзина:
+      <cart-button [book]="book"></cart-button>
+    </div>
   </div>
 </div>

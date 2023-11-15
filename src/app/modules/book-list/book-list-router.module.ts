@@ -1,7 +1,7 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from "@angular/router";
-import {BookListComponent} from "./book-list.component";
-import {BookDetailComponent} from "./components/book-detail/book-detail.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { BookListComponent } from './book-list.component';
+import { BookDetailComponent } from './components/book-detail/book-detail.component';
 
 const routes: Routes = [
   {
@@ -17,11 +17,10 @@ const routes: Routes = [
     redirectTo: '',
     pathMatch: 'full',
   },
-]
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class BookListRouterModule {
-}
+export class BookListRouterModule {}

@@ -1,63 +1,54 @@
 <div class="books">
-  <table class="books-table"
-         tuiTable
-         [columns]="columns"
-         *ngIf="(books$ | async) as books">
+  <table
+    class="books-table"
+    *ngIf="books$ | async as books"
+    [columns]="columns"
+    tuiTable
+  >
     <thead>
-    <tr>
-      <th tuiTh colspan="5">
-        <tui-input #inputElement>
-          Поиск
-          <input
-            (input)="searchBooks(inputElement.value)"
-            placeholder="Введите название книги"
-            tuiTextfield
-          />
-        </tui-input>
-      </th>
-    </tr>
-    <tr tuiThGroup>
-      <th tuiTh *tuiHead="'number'" [sorter]="null">#</th>
-      <th tuiTh *tuiHead="'title'">Название</th>
-      <th tuiTh *tuiHead="'subtitle'" [sorter]="null">Дополнительно</th>
-      <th tuiTh *tuiHead="'price'">Цена</th>
-      <th tuiTh *tuiHead="'cart'" [sorter]="null">Корзина</th>
-    </tr>
+      <tr>
+        <th tuiTh colspan="5">
+          <tui-input #inputElement>
+            Поиск
+            <input
+              (input)="searchBooks(inputElement.value)"
+              placeholder="Введите название книги"
+              tuiTextfield
+            />
+          </tui-input>
+        </th>
+      </tr>
+      <tr tuiThGroup>
+        <th *tuiHead="'number'" [sorter]="null" tuiTh>#</th>
+        <th *tuiHead="'title'" tuiTh>Название</th>
+        <th *tuiHead="'subtitle'" [sorter]="null" tuiTh>Дополнительно</th>
+        <th *tuiHead="'price'" tuiTh>Цена</th>
+        <th *tuiHead="'cart'" [sorter]="null" tuiTh>Корзина</th>
+      </tr>
     </thead>
-    <tbody tuiTbody
-           *tuiLet="books | tuiTableSort as sortedUsers"
-           [data]="sortedUsers">
-    <tr
-      tuiTr
-      (click)="toDetailPage(book.isbn13)"
-      *ngFor="let book of sortedUsers; let i = index">
-      <td *tuiCell="'number'"
-          tuiTd>
-        {{i + 1}}
-      </td>
-      <td *tuiCell="'title'"
-          tuiTd>
-        <img width="30px"
-             [src]="book.image"
-             [alt]="book.title">
-        {{book.title}}
-      </td>
-      <td *tuiCell="'subtitle'" tuiTd>{{book.subtitle || 'Нет данных'}}</td>
-      <td *tuiCell="'price'" tuiTd>{{book.price}}</td>
-      <td *tuiCell="'cart'" tuiTd (click)="$event.stopPropagation()">
-        <button
-          *tuiLet="book.isInCart as isInCart"
-          tuiIconButton
-          [title]="isInCart ? 'Удалить из корзины' : 'Добавить в корзину'"
-          size="s"
-          shape="rounded"
-          [appearance]="isInCart ? 'secondary-destructive' : 'primary'"
-          [iconRight]="isInCart ? 'tuiIconTrash2' : 'tuiIconPlus'"
-          (click)="addToOrRemoveFromCart(book)"
-        >
-        </button>
-      </td>
-    </tr>
+    <tbody
+      *tuiLet="books | tuiTableSort as sortedUsers"
+      [data]="sortedUsers"
+      tuiTbody
+    >
+      <tr
+        *ngFor="let book of sortedUsers; let i = index"
+        (click)="toDetailPage(book.isbn13)"
+        tuiTr
+      >
+        <td *tuiCell="'number'" tuiTd>
+          {{ i + 1 }}
+        </td>
+        <td *tuiCell="'title'" tuiTd>
+          <img [src]="book.image" [alt]="book.title" width="30px" />
+          {{ book.title }}
+        </td>
+        <td *tuiCell="'subtitle'" tuiTd>{{ book.subtitle || 'Нет данных' }}</td>
+        <td *tuiCell="'price'" tuiTd>{{ book.price }}</td>
+        <td *tuiCell="'cart'" (click)="$event.stopPropagation()" tuiTd>
+          <cart-button [book]="book"></cart-button>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>

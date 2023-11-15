@@ -1,15 +1,12 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, map, Observable, take, tap} from "rxjs";
-import {Book} from "../../models/book";
-import {Cart} from "../cart-service/cart.service";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, map, Observable, take, tap } from 'rxjs';
+import { Book, Cart } from '../../models/book';
 import * as booksJsonData from '../../books-data/books.json';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BooksDataService {
-
   private readonly cartKey = 'cart';
 
   private readonly responseBooks = booksJsonData;
@@ -21,37 +18,38 @@ export class BooksDataService {
   book$ = new BehaviorSubject<Book | undefined>(undefined);
 
   getBooks$(): Observable<Book[]> {
-    let cart = this.getCart()
-    return this.allBooks$
-      .pipe(
-        map(response => response.map(item => ({
+    let cart = this.getCart();
+    return this.allBooks$.pipe(
+      map((response) =>
+        response.map((item) => ({
           ...item,
-          isInCart: Boolean(cart[item.isbn13]),
-        }))),
-        tap(books => {
-          this.books$.next(books);
-          this.allBooks$.next(books);
-        }),
-        take(1),
-      )
+          counterBooks: cart[item.isbn13],
+        }))
+      ),
+      tap((books) => {
+        this.books$.next(books);
+        this.allBooks$.next(books);
+      }),
+      take(1)
+    );
   }
 
   getBookFromId(id: string): Observable<Book | undefined> {
     const cart = this.getCart();
     return this.allBooks$.pipe(
-      map(allBooks => allBooks.find(book => book.isbn13 === id)),
-      tap(book => {
+      map((allBooks) => allBooks.find((book) => book.isbn13 === id)),
+      tap((book) => {
         if (book) {
           if (cart[book.isbn13]) {
-            book.isInCart = true;
+            book.counterBooks = cart[book.isbn13];
           } else {
-            book.isInCart = false;
+            book.counterBooks = undefined;
           }
           this.book$.next(book);
         }
       }),
-      take(1),
-    )
+      take(1)
+    );
   }
 
   private getCart(): Cart {
